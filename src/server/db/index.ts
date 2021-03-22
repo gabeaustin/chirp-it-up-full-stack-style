@@ -1,24 +1,19 @@
 import * as mysql from "mysql";
 
-const pool = mysql.createPool({
+export const Connection = mysql.createConnection({
+    // don't store pswd here - only putting here for walkthru
     host: "localhost",
-    user: 'chirprapp',
-    password: 'hunter2',
-    port: 3306,
-    database: "chirpr",
-    connectionLimit: 10
+    port: 3306, // or 3000
+    user: "chirper01",
+    password: "password123",
+    database: "chirperapp"
 });
 
-export const Query = <T = any>(query: string, values?: Array<string | number>) => {
-    const sql = mysql.format(query, values);
-
-    return new Promise<T>((resolve, reject) => {
-        pool.query(sql, (err, results) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(results);
-            }
+export const Query = (query: string, values?: Array<string | number>) => {
+    return new Promise<Array<any>>((resolve, reject) => {
+        Connection.query(query, values, (err, results) => {
+            if(err) return reject(err);
+            return resolve(results);
         });
     });
 };
